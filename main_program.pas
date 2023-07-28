@@ -1,16 +1,14 @@
 program project1;
 
-uses split_string, SysUtils;
+uses
+  split_string, {a unit with function: to_array, get_file}
+  SysUtils, {to use TStringArray}
+  Classes; {to use TStringList}
 
 var
-  test: TStringArray;
-  line: string;
+
 
 begin
-  writeln('Input a sentence: ');
-  readln(line);
-  test := change(line);
-  writeln(test[2]);
-
+  writeln((get_file('text.txt'))[4]);
   readln();
 end.
