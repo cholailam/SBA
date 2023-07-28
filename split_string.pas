@@ -9,7 +9,7 @@ function get_file(file_name: string): TStringList;
 implementation
 
 
-
+{change string to array, divided by '.'}
 function to_array(sentence: string): TStringArray;
   begin
     to_array := sentence.Split('.');
@@ -17,23 +17,26 @@ function to_array(sentence: string): TStringArray;
   end;
 
 
-
+{get the file and store the content by list}
 function get_file(file_name: string): TStringList;
   var
-    passage: TextFile;
-    temp_list: TStringList;
-    temp: string;
-  begin
-    AssignFile(passage, file_name);
-    try
-      reset(passage);
-      temp_list := TStringList.Create;
+    passage: TextFile; {variable for the file}
+    temp_list: TStringList; {list to store content of file}
+    temp: string; {variable for content of file}
 
-      while not eof(passage) do
+
+  begin
+    AssignFile(passage, file_name); {name the file as 'passage'}
+    try
+      reset(passage); {open file}
+      temp_list := TStringList.Create; {initialize list}
+
+      while not eof(passage) do {read every line in the file}
       begin
         readln(passage,temp);
-        temp_list.append(temp);
+        temp_list.append(temp); {add the content in each line as the last element}
       end;
+      {finish storing all content into the list}
 
       CloseFile(passage);
       get_file := temp_list;
@@ -41,4 +44,5 @@ function get_file(file_name: string): TStringList;
     end;
   end;
 
-end.   
+
+end.
