@@ -3,17 +3,16 @@ unit general;
 interface
 uses SysUtils, Classes;
 
-function to_array(paragraph, divide: string): TStringArray;
+function to_array(paragraph: ansistring; divide: string): TStringArray;
 function get_file(file_name: string): TStringList;
 
 implementation
 
 
 {change string to array, divided by 'divide'}
-function to_array(paragraph, divide: string): TStringArray;
+function to_array(paragraph: ansistring; divide: string): TStringArray;
   begin
-    to_array := paragraph.Split(divide);
-    readln;
+    to_array := paragraph.Split([divide])
   end;
 
 
