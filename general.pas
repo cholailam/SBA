@@ -39,7 +39,10 @@ function get_file(file_name: string): TStringList;
 
       CloseFile(passage);
       get_file := temp_list;
-    finally
+
+    except
+      on E: EInOutError do
+        get_file := nil;
     end;
   end;
 
