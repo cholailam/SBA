@@ -1,22 +1,22 @@
-unit begin_with_pronoun;
+unit wordings;
 
 interface
 
 uses
   Classes, SysUtils, general, StrUtils;
 
+function frequency(paragraph: ansistring):
 function begin_pronoun(paragraph: ansistring): integer;
 
-var
-  sentences: TStringArray;
-  line: ansistring;
-  words: TStringArray;
-  count: integer;
-  pronouns: array of String = ('He', 'She', 'It', 'I', 'We', 'You', 'They');
 
 implementation
 
 function begin_pronoun(paragraph: ansistring): integer;
+var
+  sentences, words: TStringArray;
+  line: ansistring;
+  count: integer;
+  pronouns: array of String = ('He', 'She', 'It', 'I', 'We', 'You', 'They');
 begin
   count := 0;
   sentences := to_array(paragraph, '.');
