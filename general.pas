@@ -5,6 +5,7 @@ uses SysUtils, Classes;
 
 function to_array(paragraph: ansistring; divide: string): TStringArray;
 function get_file(file_name: string): TStringList;
+function pure_sen(paragraph: TStringList): string;
 
 implementation
 
@@ -46,5 +47,17 @@ function get_file(file_name: string): TStringList;
     end;
   end;
 
+function pure_sen(paragraph: TStringList): string;
+var
+  each_para: string;
+  all_sen: string;
+begin
+  all_sen := '';
+  for each_para in paragraph do
+  begin
+    appendstr(all_sen, each_para);
+  end;
+  pure_sen := all_sen;
+end;
 
 end.
