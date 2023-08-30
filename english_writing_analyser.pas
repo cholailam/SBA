@@ -54,7 +54,6 @@ begin
 
     else if analyser = '2' then
       begin
-        writeln('Under construction');
         for cata in connectives do
         begin
           write('Number of ', cata, ' connectives: ');
