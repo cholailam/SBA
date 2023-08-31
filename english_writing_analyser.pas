@@ -15,6 +15,14 @@ var
   all_sen: string;
   connectives: array of string = ('addition', 'result', 'contrast', 'summarize');
   cata: string;
+  num_con: integer;
+
+  vocab: TList;
+  fre_of_vocab: TList;
+  each_sen: TStringArray;
+  sentences: string;
+  div_sen: TStringArray;
+  words: string;
 
 begin
   repeat
@@ -29,6 +37,27 @@ begin
       end;
   until paragraph <> nil;
 
+  {Preprocessing text obtained in text file}
+  all_sen := pure_sen(paragraph); {convert list of paragraphs to string of sentences}
+  each_sen := to_array(all_sen, '.'); {Array of all sentences}
+
+  {for finding frequency}
+  for sentences in each_sen do
+  begin
+    div_sen := to_array(lowerCase(trim(sentences)), ' ');
+    for words in div_sen do
+    begin
+      if words in vocab then
+        fre_of_vocab[vocab.IndexOf(words)] += 1;
+      else
+      begin
+        vocab.add(words);
+        fre_of_vocab.add(1);
+      end;
+    end;
+  end;
+
+  {showing result}
   repeat
     writeln();
     writeln('Enter 1 for wordings analyser');
@@ -38,11 +67,10 @@ begin
     writeln();
     writeln('=================================');
 
-    all_sen := pure_sen(paragraph); {convert list of paragraphs to string of sentences}
     if analyser = '1' then
       begin
         writeln('Frequency of');
-        writeln(frequency(all_sen)['is']);
+        writeln(find_max_fre(fre_of_vocab));
         writeln();
 
         writeln('Number of sentences start with pronoun');
@@ -56,9 +84,17 @@ begin
       begin
         for cata in connectives do
         begin
+          num_con := num_connectives(all_sen, cata);
           write('Number of ', cata, ' connectives: ');
-          writeln(num_connectives(all_sen, cata));
+          writeln(num_con);
+          if (num_con > 0) then
+          begin
+            write('Recommand ', cata, ' connective: ');
+            writeln(give_connectives(cata));
+          end;
+        writeln();
         end;
+
       end;
 
     writeln('=================================');
