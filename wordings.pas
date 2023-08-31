@@ -3,9 +3,9 @@ unit wordings;
 interface
 
 uses
-  Classes, SysUtils, general, StrUtils, Generics.Collections;
+  Classes, SysUtils, general, StrUtils;
 
-function frequency(paragraph: ansistring): specialize TDictionary<string, integer>;
+function find_max_fre(fre_of_vocab: TList): integer;
 function begin_pronoun(paragraph: ansistring): integer;
 
 
@@ -32,31 +32,19 @@ begin
 end;
 
 
-
-function frequency(paragraph: ansistring): specialize TDictionary<string, integer>;
+{return the index of max value}
+function find_max_fre(fre_of_vocab: TList): integer;
 var
-  sentences, words: TStringArray;
-  line, each_word: ansistring;
-  fre: specialize TDictionary<string, integer>;
+  max_fre: integer;
+  i: integer;
 begin
-  fre := specialize TDictionary<string, integer>.Create;
-  sentences := to_array(paragraph, '.');
-  for line in sentences do
+  max_fre := maxValue(fre_of_vocab);
+  for i := 0 to (length(fre_of_vocab)-1) do
   begin
-    words := to_array(Trim(line), ' ');
-
-    for each_word in words do
-    begin
-      try
-        fre.add(each_word, 1);
-      except
-        on E: Exception do
-          fre[each_word] := fre[each_word] +1;
-      end;
-    end;
-
+    if (fre_of_vocab[i] = max_fre) then
+    find_max_fre := i;
   end;
-  frequency := fre;
+  find_max_fre := -1;
 end;
 
 
