@@ -1,11 +1,13 @@
 unit general;
 
 interface
-uses SysUtils, Classes;
+uses SysUtils, Classes, Generics.Collections, StrUtils;
 
 function to_array(paragraph: ansistring; divide: string): TStringArray;
 function get_file(file_name: string): TStringList;
 function pure_sen(paragraph: TStringList): string;
+function pure_words(all_sen: TStringArray): specialize TList<string>;
+
 
 implementation
 
@@ -58,6 +60,23 @@ begin
     appendstr(all_sen, each_para);
   end;
   pure_sen := all_sen;
+end;
+
+function pure_words(all_sen: TStringArray): specialize TList<string>;
+var
+  all_words: TList;
+  each_words: TStringArray;
+  sentences: string;
+  words: string;
+begin
+  all_words := TList<string>.create;
+  for sentences in all_sen do
+  begin
+    each_words := to_array(lowerCase(trim(sentences)), ' ');
+    for words in each_words do
+      all_words.add(words);
+  end;
+  pure_words := all_words;
 end;
 
 end.
