@@ -6,7 +6,7 @@ uses
   Classes,  {to use TStringList}
   StrUtils, {to use PosEx}
   wordings, readability,
-  Generics.Collections;
+  math, Generics.Collections;
 
 var
   link, analyser: string;
@@ -16,13 +16,14 @@ var
   connectives: array of string = ('addition', 'result', 'contrast', 'summarize');
   cata: string;
   num_con: integer;
+  all_words: specialize TList<string>;
 
-  vocab: TList;
-  fre_of_vocab: TList;
+  vocab: specialize TList<string>;
+  fre_of_vocab: TIntegerArray;
   each_sen: TStringArray;
   sentences: string;
-  div_sen: TStringArray;
   words: string;
+  now: integer;
 
 begin
   repeat
@@ -40,22 +41,24 @@ begin
   {Preprocessing text obtained in text file}
   all_sen := pure_sen(paragraph); {convert list of paragraphs to string of sentences}
   each_sen := to_array(all_sen, '.'); {Array of all sentences}
+  all_words := pure_words(each_sen);
+
 
   {for finding frequency}
-  for sentences in each_sen do
+  {now := 0;
+  vocab := default(specialize TList<string>);
+  fre_of_vocab := default(TIntegerArray);
+  for words in all_words do
   begin
-    div_sen := to_array(lowerCase(trim(sentences)), ' ');
-    for words in div_sen do
+    if (vocab.indexOf(words) <> -1) then
+      fre_of_vocab[vocab.IndexOf(words)] += 1
+    else
     begin
-      if words in vocab then
-        fre_of_vocab[vocab.IndexOf(words)] += 1;
-      else
-      begin
-        vocab.add(words);
-        fre_of_vocab.add(1);
-      end;
+      vocab[now] := words;
+      fre_of_vocab[now] := 1;
+      now += 1;
     end;
-  end;
+  end;}
 
   {showing result}
   repeat
@@ -69,15 +72,13 @@ begin
 
     if analyser = '1' then
       begin
-        writeln('Frequency of');
+        {writeln('Highest frequency: ');
         writeln(find_max_fre(fre_of_vocab));
         writeln();
-
+        }
         writeln('Number of sentences start with pronoun');
         for each_para in paragraph do
-          begin
             writeln('paragraph ', paragraph.IndexOf(each_para)+1, ': ', begin_pronoun(each_para));
-          end;
       end
 
     else if analyser = '2' then
