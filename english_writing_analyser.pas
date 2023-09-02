@@ -8,22 +8,32 @@ uses
   wordings, readability,
   math, Generics.Collections;
 
+const
+  connectives: array[0..3] of string = ('addition', 'result', 'contrast', 'summarize');
+  auxiliary: array[0..9] of string = ('is', 'am', 'are', 'was', 'were', 'not', 'isn''t', 'aren''t', 'wasn''t', 'weren''t');
+  pronoun: array[0..6] of string = ('he', 'she', 'it', 'I', 'we', 'you', 'they');
+
 var
-  link, analyser: string;
+  {use in file abstraction and choosing analyser}
+  link, analyser, cata: string;
+
+  {file preprocessing}
   paragraph: TStringList;
   each_para: ansistring;
   all_sen: string;
-  connectives: array of string = ('addition', 'result', 'contrast', 'summarize');
-  cata: string;
-  num_con: integer;
+  each_sen: TStringArray;
   all_words: specialize TList<string>;
 
+  {wordings analyser}
   vocab: specialize TList<string>;
   fre_of_vocab: TIntegerArray;
-  each_sen: TStringArray;
-  sentences: string;
   words: string;
   now: integer;
+  keyword: string;
+
+  {readability analyser}
+  num_con: integer;
+
 
 begin
   repeat
@@ -52,7 +62,7 @@ begin
   begin
     if (vocab.indexOf(words) <> -1) then
       fre_of_vocab[vocab.IndexOf(words)] += 1
-    else
+    else if not(words in auxiliary) and not(words in pronoun) then
     begin
       vocab[now] := words;
       fre_of_vocab[now] := 1;
@@ -76,6 +86,10 @@ begin
         writeln(find_max_fre(fre_of_vocab));
         writeln();
         }
+        write('Enter a word to find the frequency of it: ');
+        readln(keyword);
+        writeln('Frequency of the word = ', freq_of_keyword(lowercase(trim(keyword)), all_words));
+        writeln();
         writeln('Number of sentences start with pronoun');
         for each_para in paragraph do
             writeln('paragraph ', paragraph.IndexOf(each_para)+1, ': ', begin_pronoun(each_para));
@@ -96,6 +110,9 @@ begin
         writeln();
         end;
 
+        writeln('---------------------------------');
+        writeln('Number of passive voice used: ', passive(each_sen));
+        writeln();
       end;
 
     writeln('=================================');
