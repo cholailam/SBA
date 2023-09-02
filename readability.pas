@@ -13,6 +13,8 @@ var
 
 function count_substring(sub_str, whole_str: string): integer;
 function num_connectives(sentences: ansistring; cata: string): integer;
+function give_connectives(cata: string): string;
+function passive(each_sen: TStringArray): integer;
 
 implementation
 
@@ -39,10 +41,8 @@ end;
 function num_connectives(sentences: ansistring; cata: string): integer;
 var
   line: TStringArray;
-  words: string;
-  connect: string;
-  count: integer;
-  all_count: integer;
+  words, connect: string;
+  count, all_count: integer;
 
 begin
   all_count := 0;
@@ -90,6 +90,61 @@ begin
   num_connectives := all_count;
 end;
 
+
+function give_connectives(cata: string): string;
+var
+  rand_con: string;
+begin
+  Randomize;
+  if (cata = 'addition') then
+    rand_con := con_addition[random(length(con_addition))]
+
+  else if (cata = 'result') then
+    rand_con := con_result[random(length(con_result))]
+
+  else if (cata = 'contrast') then
+    rand_con := con_contrast[random(length(con_contrast))]
+
+  else if (cata = 'summarize') then
+    rand_con := con_summarize[random(length(con_summarize))];
+  give_connectives := rand_con;
+end;
+
+
+function passive(each_sen: TStringArray): integer;
+const
+  auxiliary: array[0..15] of string = ('be', 'is', 'am', 'are', 'was', 'were', 'have', 'has', 'will', 'isn''t', 'aren''t', 'wasn''t', 'weren''t', 'haven''t', 'hasn''t', 'won''t');
+  diff_be: array[0..3] of string = ('be', 'been', 'being', 'not');
+var
+  count: integer;
+  sentences: string;
+  each_words: TStringArray;
+  i: integer;
+begin
+  count := 0;
+  for sentences in each_sen do
+  begin
+    each_words := to_array(trim(sentences), ' ');
+
+    for i := 0 to length(each_words)-2 do
+    begin
+      if each_words[i] in auxiliary then
+      begin
+        if ((RPOS('ed', each_words[i+1]) = length(each_words[i+1])-1) and (RPOS('ed', each_words[i+1]) <> 0))
+        or ((RPOS('en', each_words[i+1]) = length(each_words[i+1])-1) and (RPOS('en', each_words[i+1]) <> 0)) then
+          count += 1
+        else if (each_words[i+1] in diff_be) then
+        begin
+          if ((RPOS('ed', each_words[i+2]) = length(each_words[i+2])-1) and (RPOS('ed', each_words[i+2]) <> 0))
+          or ((RPOS('en', each_words[i+2]) = length(each_words[i+2])-1) and (RPOS('en', each_words[i+2]) <> 0)) then
+            count += 1;
+        end;
+      end;
+    end;
+
+  end;
+  passive := count;
+end;
+
 end.
 
-{function give_connectives():}
