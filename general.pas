@@ -49,6 +49,7 @@ function get_file(file_name: string): TStringList;
     end;
   end;
 
+
 function pure_sen(paragraph: TStringList): string;
 var
   each_para: string;
@@ -62,14 +63,15 @@ begin
   pure_sen := all_sen;
 end;
 
+
 function pure_words(all_sen: TStringArray): specialize TList<string>;
 var
-  all_words: TList;
+  all_words: specialize TList<string>;
   each_words: TStringArray;
   sentences: string;
-  words: string;
+  words: ansistring;
 begin
-  all_words := TList<string>.create;
+  all_words := specialize TList<string>.create;
   for sentences in all_sen do
   begin
     each_words := to_array(lowerCase(trim(sentences)), ' ');
