@@ -10,8 +10,6 @@ uses
 
 const
   connectives: array[0..3] of string = ('addition', 'result', 'contrast', 'summarize');
-  auxiliary: array[0..9] of string = ('is', 'am', 'are', 'was', 'were', 'not', 'isn''t', 'aren''t', 'wasn''t', 'weren''t');
-  pronoun: array[0..6] of string = ('he', 'she', 'it', 'I', 'we', 'you', 'they');
 
 var
   {use in file abstraction and choosing analyser}
@@ -22,16 +20,11 @@ var
   each_para: ansistring;
   all_sen: string;
   each_sen: TStringArray;
-  all_words: specialize TList<string>;
 
   {wordings analyser}
   i: string;
   top_3_freq: specialize TDictionary<string, integer>;
   number: integer;
-  vocab: specialize TList<string>;
-  fre_of_vocab: TIntegerArray;
-  words: string;
-  now: integer;
   keyword: string;
 
   {readability analyser}
@@ -54,24 +47,6 @@ begin
   {Preprocessing text obtained in text file}
   all_sen := pure_sen(paragraph); {convert list of paragraphs to string of sentences}
   each_sen := to_array(all_sen, '.'); {Array of all sentences}
-  all_words := pure_words(each_sen);
-
-
-  {for finding frequency}
-  {now := 0;
-  vocab := default(specialize TList<string>);
-  fre_of_vocab := default(TIntegerArray);
-  for words in all_words do
-  begin
-    if (vocab.indexOf(words) <> -1) then
-      fre_of_vocab[vocab.IndexOf(words)] += 1
-    else if not(words in auxiliary) and not(words in pronoun) then
-    begin
-      vocab[now] := words;
-      fre_of_vocab[now] := 1;
-      now += 1;
-    end;
-  end;}
 
   {showing result}
   repeat
@@ -88,19 +63,19 @@ begin
         write('Enter a word to find the frequency of it: ');
         readln(keyword);
 
-        top_3_freq := find_top_3(all_words, lowercase(trim(keyword)));
+        top_3_freq := find_top_3(each_sen, lowercase(trim(keyword)));
 
         writeln();
         number := 1;
         for i in top_3_freq.Keys do
         begin
-          if number <> 4 then
-            writeln('No. ', number, ' frequency word is: ', i, ' with frequency ', top_3_freq[i])
+          if (number = 4) then
+            writeln('Frequency of the word = ', top_3_freq[i])
           else
-            writeln('Frequency of the word = ', top_3_freq[i]{freq_of_keyword(lowercase(trim(keyword)), all_words)});
+            writeln('No. ', number, ' frequency word is: ', i, ' with frequency ', top_3_freq[i]);
           number += 1;
         end;
-
+        writeln();
 
         writeln('Number of sentences start with pronoun');
         for each_para in paragraph do
