@@ -6,7 +6,6 @@ uses SysUtils, Classes, Generics.Collections, StrUtils;
 function to_array(paragraph: ansistring; divide: string): TStringArray;
 function get_file(file_name: string): TStringList;
 function pure_sen(paragraph: TStringList): string;
-function pure_words(all_sen: TStringArray): specialize TList<string>;
 
 
 implementation
@@ -64,21 +63,5 @@ begin
 end;
 
 
-function pure_words(all_sen: TStringArray): specialize TList<string>;
-var
-  all_words: specialize TList<string>;
-  each_words: TStringArray;
-  sentences: string;
-  words: ansistring;
-begin
-  all_words := specialize TList<string>.create;
-  for sentences in all_sen do
-  begin
-    each_words := to_array(lowerCase(trim(sentences)), ' ');
-    for words in each_words do
-      all_words.add(words);
-  end;
-  pure_words := all_words;
-end;
 
 end.
