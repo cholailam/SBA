@@ -25,6 +25,9 @@ var
   all_words: specialize TList<string>;
 
   {wordings analyser}
+  i: string;
+  top_3_freq: specialize TDictionary<string, integer>;
+  number: integer;
   vocab: specialize TList<string>;
   fre_of_vocab: TIntegerArray;
   words: string;
@@ -82,14 +85,23 @@ begin
 
     if analyser = '1' then
       begin
-        {writeln('Highest frequency: ');
-        writeln(find_max_fre(fre_of_vocab));
-        writeln();
-        }
         write('Enter a word to find the frequency of it: ');
         readln(keyword);
-        writeln('Frequency of the word = ', freq_of_keyword(lowercase(trim(keyword)), all_words));
+
+        top_3_freq := find_top_3(all_words, lowercase(trim(keyword)));
+
         writeln();
+        number := 1;
+        for i in top_3_freq.Keys do
+        begin
+          if number <> 4 then
+            writeln('No. ', number, ' frequency word is: ', i, ' with frequency ', top_3_freq[i])
+          else
+            writeln('Frequency of the word = ', top_3_freq[i]{freq_of_keyword(lowercase(trim(keyword)), all_words)});
+          number += 1;
+        end;
+
+
         writeln('Number of sentences start with pronoun');
         for each_para in paragraph do
             writeln('paragraph ', paragraph.IndexOf(each_para)+1, ': ', begin_pronoun(each_para));
