@@ -69,10 +69,16 @@ begin
         number := 1;
         for i in top_3_freq.Keys do
         begin
-          if (number = 4) then
-            writeln('Frequency of the word = ', top_3_freq[i])
+          if (number = 1) then
+          begin
+            writeln('Frequency of the word = ', top_3_freq[i]);
+            writeln();
+          end
           else
-            writeln('No. ', number, ' frequency word is: ', i, ' with frequency ', top_3_freq[i]);
+          begin
+            writeln('No. ', number-1 , ' frequency word is: ', trim(i));
+            writeln('With frequency ', top_3_freq[i]);
+          end;
           number += 1;
         end;
         writeln();
