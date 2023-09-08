@@ -10,7 +10,8 @@ function begin_pronoun(paragraph: ansistring): integer;
 
 const
   pronouns: array[0..6] of string = ('he', 'she', 'it', 'I', 'we', 'you', 'they');
-
+  auxiliary: array[0..15] of string = ('the', 'is', 'am', 'are', 'was', 'were', 'have', 'has', 'will', 'isn''t', 'aren''t', 'wasn''t', 'weren''t', 'haven''t', 'hasn''t', 'won''t');
+  diff_be: array[0..3] of string = ('be', 'been', 'being', 'not');
 
 implementation
 
@@ -20,9 +21,9 @@ var
   word: string;
   all_words: TStringArray;
   all_words_freq, top_3_dict: specialize Tdictionary<string, integer>;
-  freq_key1, freq_key2, freq_key3: string;
+  freq_key: string;
   item: string;
-  i: integer;
+  times: integer;
   j: TStringArray;
 begin
   all_words_freq := specialize TDictionary<string, integer>.create;
@@ -32,57 +33,51 @@ begin
   begin
     all_words := to_array(sentences, ' ');
 
-  for word in all_words do
-  begin
-    try
-      all_words_freq.add(lowercase(trim(word)), 1);
-    except on E: Exception do
-      all_words_freq[lowercase(trim(word))] := all_words_freq[lowercase(trim(word))] + 1;
-    end;
-  end;
-  end;
-
-j := all_words_freq.Keys.toarray;
-    freq_key1 := j[1];
-    freq_key2 := j[1];
-    freq_key3 := j[1];
-
-  for item in all_words_freq.Keys do
-  begin
-    if (all_words_freq[freq_key3] < all_words_freq[item]) and (item <> '')then
+    for word in all_words do
     begin
-      if all_words_freq[freq_key2] < all_words_freq[item] then
+      if (word <> '') and (word <> ' ') then
       begin
-
-        if all_words_freq[freq_key1] < all_words_freq[item] then
-        begin
-          freq_key3 := freq_key2;
-          freq_key2 := freq_key1;
-          freq_key1 := item;
-        end
-        else
-        begin
-          freq_key3 := freq_key2;
-          freq_key2 := item;
+        try
+          all_words_freq.add(lowercase(trim(word)), 1)
+        except on E: Exception do
+          all_words_freq[lowercase(trim(word))] := all_words_freq[lowercase(trim(word))] + 1;
         end;
-
-      end
-      else freq_key3 := item;
+      end;
     end;
   end;
 
-  top_3_dict.add(freq_key1,all_words_freq[freq_key1]);
-  top_3_dict.add(freq_key2, all_words_freq[freq_key2]);
-  top_3_dict.add(freq_key3, all_words_freq[freq_key3]);
-  top_3_dict[keyword] := all_words_freq[keyword];
-  find_top_3 := top_3_dict;
+  if all_words_freq.ContainsKey(keyword) then
+    top_3_dict.add(keyword, all_words_freq[keyword])
+  else
+    top_3_dict.add(keyword, 0);
+
+  j := all_words_freq.Keys.toarray;
+    freq_key := j[1];
+
+  times := 1;
+  while (times <= 3) do
+  begin
+    for item in all_words_freq.Keys do
+    begin
+      if (all_words_freq[freq_key] < all_words_freq[item]) and not(item in pronouns) and not(item in auxiliary) and not(item in diff_be) then
+        freq_key := item;
+    end;
+
+    try
+      top_3_dict.add(freq_key, all_words_freq[freq_key]);
+    except on E: exception do
+      top_3_dict.add(freq_key+' ', all_words_freq[freq_key]);
+    end;
+    all_words_freq[freq_key] := 0;
+    times += 1;
+  end;
+
+    find_top_3 := top_3_dict;
 end;
 
 
 
 function begin_pronoun(paragraph: ansistring): integer;
-{const
-  pronouns: array[0..6] of String = ('He', 'She', 'It', 'I', 'We', 'You', 'They');}
 var
   sentences, words: TStringArray;
   line: ansistring;
