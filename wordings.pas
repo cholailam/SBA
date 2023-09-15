@@ -3,9 +3,11 @@ unit wordings;
 interface
 
 uses
-  Classes, SysUtils, general, StrUtils, math, Generics.Collections;
+  Classes, SysUtils, general, StrUtils, Generics.Collections;
 
-function find_top_3(each_sen: TStringArray; keyword: string): specialize Tdictionary<string, integer>;
+type top_3 = array[0..3, 0..1] of string;
+
+function find_top_3(each_sen: TStringArray; keyword: string): top_3;
 function begin_pronoun(paragraph: ansistring): integer;
 
 const
@@ -15,20 +17,25 @@ const
 
 implementation
 
-function find_top_3(each_sen: TStringArray; keyword: string): specialize Tdictionary<string, integer>;
+
+function find_top_3(each_sen: TStringArray; keyword: string): top_3;
 var
-  sentences: string;
-  word: string;
+
+  {frequency of all words}
   all_words: TStringArray;
-  all_words_freq, top_3_dict: specialize Tdictionary<string, integer>;
-  freq_key: string;
-  item: string;
+  sentences, word: string;
+  all_words_freq: specialize Tdictionary<string, integer>;
+
+  {finding top 3 highest frequency words}
+  top_3_freq: array[0..3, 0..1] of string;
+  freq_key, item: string;
   times: integer;
   j: TStringArray;
+
 begin
   all_words_freq := specialize TDictionary<string, integer>.create;
-  top_3_dict := specialize TDictionary<string, integer>.create;
 
+  {finding frequency of every words}
   for sentences in each_sen do
   begin
     all_words := to_array(sentences, ' ');
@@ -46,14 +53,22 @@ begin
     end;
   end;
 
+  {finding frequency of the keyword}
   if all_words_freq.ContainsKey(keyword) then
-    top_3_dict.add(keyword, all_words_freq[keyword])
+  begin
+    top_3_freq[0, 0] := keyword;
+    top_3_freq[0, 1] := IntToStr(all_words_freq[keyword]);
+  end
   else
-    top_3_dict.add(keyword, 0);
+  begin
+    top_3_freq[0, 0] := keyword;
+    top_3_freq[0, 1] := '0';
+  end;
 
   j := all_words_freq.Keys.toarray;
     freq_key := j[1];
 
+  {finding top 3 frequency}
   times := 1;
   while (times <= 3) do
   begin
@@ -64,15 +79,21 @@ begin
     end;
 
     try
-      top_3_dict.add(freq_key, all_words_freq[freq_key]);
-    except on E: exception do
-      top_3_dict.add(freq_key+' ', all_words_freq[freq_key]);
+    begin
+      top_3_freq[times, 0] := freq_key;
+      top_3_freq[times, 1] := IntToStr(all_words_freq[freq_key]);
     end;
+    except on E: exception do
+    begin
+      top_3_freq[times, 0] := freq_key+' ';
+      top_3_freq[times, 1] := IntToStr(all_words_freq[freq_key]);
+    end;
+    end;
+
     all_words_freq[freq_key] := 0;
     times += 1;
   end;
-
-    find_top_3 := top_3_dict;
+    find_top_3 := top_3_freq;
 end;
 
 
@@ -95,8 +116,6 @@ begin
   end;
   begin_pronoun := count;
 end;
-
-
 
 
 end.
