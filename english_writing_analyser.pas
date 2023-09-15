@@ -14,18 +14,17 @@ const
 var
   {use in file abstraction and choosing analyser}
   link, analyser, cata: string;
+  paragraph: TStringList;
 
   {file preprocessing}
-  paragraph: TStringList;
-  each_para: ansistring;
   all_sen: string;
   each_sen: TStringArray;
 
   {wordings analyser}
-  i: string;
-  top_3_freq: specialize TDictionary<string, integer>;
+  top_3_freq: array[0..3, 0..1] of string;
   number: integer;
   keyword: string;
+  each_para: ansistring;
 
   {readability analyser}
   num_con: integer;
@@ -66,18 +65,18 @@ begin
         top_3_freq := find_top_3(each_sen, lowercase(trim(keyword)));
 
         writeln();
-        number := 1;
-        for i in top_3_freq.Keys do
+        number := 0;
+        while (number <= 3) do
         begin
-          if (number = 1) then
+          if (number = 0) then
           begin
-            writeln('Frequency of the word = ', top_3_freq[i]);
+            writeln('Frequency of the word = ', top_3_freq[number, 1]);
             writeln();
           end
           else
           begin
-            writeln('No. ', number-1 , ' frequency word is: ', trim(i));
-            writeln('With frequency ', top_3_freq[i]);
+            writeln('No. ', number , ' frequency word is: ', trim(top_3_freq[number, 0]));
+            writeln('With frequency ', top_3_freq[number, 1]);
           end;
           number += 1;
         end;
