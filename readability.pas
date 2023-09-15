@@ -20,9 +20,7 @@ implementation
 
 function count_substring(sub_str, whole_str: string): integer;
 var
-  start: integer;
-  point: integer;
-  num_sub: integer;
+  start, point, num_sub: integer;
 begin
   num_sub := 0;
   start := 1;
