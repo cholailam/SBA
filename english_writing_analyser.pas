@@ -13,7 +13,7 @@ const
 
 var
   {use in file abstraction and choosing analyser}
-  link, analyser, cata: string;
+  link, analyser: string;
   paragraph: TStringList;
 
   {file preprocessing}
@@ -28,6 +28,7 @@ var
 
   {readability analyser}
   num_con: integer;
+  cata: string;
 
 
 begin
