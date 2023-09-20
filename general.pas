@@ -27,9 +27,10 @@ function get_file(file_name: string): TStringList;
 
 
   begin
-    AssignFile(passage, file_name); {name the file as 'passage'}
+    AssignFile(passage, file_name); {set 'passage' as the file pointer pointing to the text file}    
+    
     try
-      reset(passage); {open file}
+      reset(passage); {set the file pointer to the beginning of the file}
       temp_list := TStringList.Create; {initialize list}
 
       while not eof(passage) do {read every line in the file}
