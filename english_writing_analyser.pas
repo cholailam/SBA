@@ -78,6 +78,8 @@ begin
           begin
             writeln('No. ', number , ' frequency word is: ', trim(top_3_freq[number, 0]));
             writeln('With frequency ', top_3_freq[number, 1]);
+            write('Any synonyms? (if no press enter): ');
+            readln();
           end;
           number += 1;
         end;
