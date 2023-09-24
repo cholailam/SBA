@@ -8,12 +8,14 @@ uses
 type top_3 = array[0..3, 0..1] of string;
 
 function find_top_3(each_sen: TStringArray; keyword: string): top_3;
+{procedure add_syno(origin, syno: string; syno_array: array of string);}
 function begin_pronoun(paragraph: ansistring): integer;
 
 const
-  pronouns: array[0..6] of string = ('he', 'she', 'it', 'I', 'we', 'you', 'they');
+  pronouns: array[0..8] of string = ('he', 'she', 'it', 'i', 'we', 'you', 'they', 'my', 'a');
   auxiliary: array[0..15] of string = ('the', 'is', 'am', 'are', 'was', 'were', 'have', 'has', 'will', 'isn''t', 'aren''t', 'wasn''t', 'weren''t', 'haven''t', 'hasn''t', 'won''t');
   diff_be: array[0..3] of string = ('be', 'been', 'being', 'not');
+  prep: array[0..8] of string = ('on', 'in', 'at', 'for', 'to', 'by', 'over', 'from', 'of');
 
 implementation
 
@@ -74,27 +76,44 @@ begin
   begin
     for item in all_words_freq.Keys do
     begin
-      if (all_words_freq[freq_key] < all_words_freq[item]) and not(item in pronouns) and not(item in auxiliary) and not(item in diff_be) then
+      if (all_words_freq[freq_key] < all_words_freq[item]) and not(item in pronouns) and not(item in auxiliary) and not(item in diff_be) and not(item in prep) then
         freq_key := item;
     end;
 
-    try
-    begin
-      top_3_freq[times, 0] := freq_key;
-      top_3_freq[times, 1] := IntToStr(all_words_freq[freq_key]);
-    end;
-    except on E: exception do
-    begin
-      top_3_freq[times, 0] := freq_key+' ';
-      top_3_freq[times, 1] := IntToStr(all_words_freq[freq_key]);
-    end;
-    end;
+    top_3_freq[times, 0] := freq_key;
+    top_3_freq[times, 1] := IntToStr(all_words_freq[freq_key]);
 
     all_words_freq[freq_key] := 0;
     times += 1;
   end;
     find_top_3 := top_3_freq;
 end;
+
+
+
+
+{procedure add_syno(origin, syno: string; syno_list: list of string);
+var
+  i: integer;
+begin
+  for i := 0 to 15 do
+  begin
+    if (origin in syno_list[i]) then
+    begin
+      syno_list[i].add(syno);
+      exit;
+    end
+    else if (syno in syno_list[i]) then
+    begin
+      syno_list[i].add(origin);
+      exit;
+    end;
+    syno_list[length(syno_list), 0] := origin;
+    syno_list[length(syno_list), 1] := syno;
+
+  end;
+end;
+}
 
 
 
