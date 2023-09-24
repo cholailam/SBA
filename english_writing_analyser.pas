@@ -25,6 +25,8 @@ var
   number: integer;
   keyword: string;
   each_para: ansistring;
+  syno: string;
+  {syno_list: list of string;}
 
   {readability analyser}
   num_con: integer;
@@ -79,7 +81,9 @@ begin
             writeln('No. ', number , ' frequency word is: ', trim(top_3_freq[number, 0]));
             writeln('With frequency ', top_3_freq[number, 1]);
             write('Any synonyms? (if no press enter): ');
-            readln();
+            readln(syno);
+            {if not(syno = '') then
+              add_syno(top_3_freq[number, 1], syno, syno_list);}
           end;
           number += 1;
         end;
