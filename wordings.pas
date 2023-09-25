@@ -5,17 +5,17 @@ interface
 uses
   Classes, SysUtils, general, StrUtils, Generics.Collections;
 
-type top_3 = array[0..3, 0..1] of string;
+type
+  top_3 = array[0..3, 0..1] of string;
 
 function find_top_3(each_sen: TStringArray; keyword: string): top_3;
-{procedure add_syno(origin, syno: string; syno_array: array of string);}
 function begin_pronoun(paragraph: ansistring): integer;
 
 const
-  pronouns: array[0..8] of string = ('he', 'she', 'it', 'i', 'we', 'you', 'they', 'my', 'a');
+  pronouns: array[0..13] of string = ('he', 'she', 'it', 'i', 'we', 'you', 'they', 'my', 'a', 'me', 'his', 'her', 'its', 'him');
   auxiliary: array[0..15] of string = ('the', 'is', 'am', 'are', 'was', 'were', 'have', 'has', 'will', 'isn''t', 'aren''t', 'wasn''t', 'weren''t', 'haven''t', 'hasn''t', 'won''t');
   diff_be: array[0..3] of string = ('be', 'been', 'being', 'not');
-  prep: array[0..8] of string = ('on', 'in', 'at', 'for', 'to', 'by', 'over', 'from', 'of');
+  prep: array[0..10] of string = ('on', 'in', 'at', 'for', 'to', 'by', 'over', 'from', 'of', 'as', 'with');
 
 implementation
 
@@ -92,31 +92,6 @@ end;
 
 
 
-{procedure add_syno(origin, syno: string; syno_list: list of string);
-var
-  i: integer;
-begin
-  for i := 0 to 15 do
-  begin
-    if (origin in syno_list[i]) then
-    begin
-      syno_list[i].add(syno);
-      exit;
-    end
-    else if (syno in syno_list[i]) then
-    begin
-      syno_list[i].add(origin);
-      exit;
-    end;
-    syno_list[length(syno_list), 0] := origin;
-    syno_list[length(syno_list), 1] := syno;
-
-  end;
-end;
-}
-
-
-
 function begin_pronoun(paragraph: ansistring): integer;
 var
   sentences, words: TStringArray;
@@ -128,7 +103,7 @@ begin
   for line in sentences do
   begin
     words := to_array(Trim(line), ' ');
-    if (words[0] in pronouns)then
+    if (lowercase(words[0]) in pronouns)then
     begin
       count := count + 1;
     end;
