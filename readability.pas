@@ -6,8 +6,8 @@ uses
   Classes, SysUtils, general, strUtils;
 
 var
-  con_addition: array of string = ('also', 'besides', 'furthermore', 'too', 'moreover', 'in addition', 'then', 'of equal importance', 'equally important', 'another', 'additionally', 'apart from this', 'as well as');
-  con_result: array of string = ('as a result', 'hence', 'accordingly', 'as a consequence', 'consequently', 'thus', 'since', 'therefore', 'for this reason', 'because of this');
+  con_addition: array of string = ('also', 'besides', 'furthermore', 'too', 'moreover', 'in addition', 'then', 'of equal importance', 'equally important', 'another', 'additionally', 'apart from this', 'as well as', 'and');
+  con_result: array of string = ('as a result', 'hence', 'accordingly', 'as a consequence', 'consequently', 'thus', 'since', 'therefore', 'for this reason', 'because of');
   con_contrast: array of string = ('in contrast', 'conversely', 'however', 'still', 'nevertheless', 'nonetheless', 'yet', 'on the other hand', 'on the contrary', 'in spite of', 'actually', 'in fact', 'despite', 'although', 'alternatively', 'even so', 'instead', 'contrary to', 'notwithstanding', 'on the other hand', 'rather', 'whereas');
   con_summarize: array of string = ('in summary', 'to sum up', 'to repeat', 'briefly', 'in short', 'finally', 'on the whole', 'therefore', 'as I have said', 'in conclusion', 'as you can see');
 
