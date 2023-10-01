@@ -8,6 +8,10 @@ uses
   wordings, readability,
   math, Generics.Collections;
 
+type
+  oneD = array of string;
+  twoD = array of oneD;
+
 const
   connectives: array[0..3] of string = ('addition', 'result', 'contrast', 'summarize');
 
@@ -19,12 +23,17 @@ var
   {file preprocessing}
   all_sen: string;
   each_sen: TStringArray;
+  syno_array: twoD;
 
   {wordings analyser}
   top_3_freq: array[0..3, 0..1] of string;
   number: integer;
   keyword: string;
   each_para: ansistring;
+  syno: string;
+  syno_file: textfile;
+  i, j: integer;
+
 
   {readability analyser}
   num_con: integer;
@@ -47,6 +56,7 @@ begin
   {Preprocessing text obtained in text file}
   all_sen := pure_sen(paragraph); {convert list of paragraphs to string of sentences}
   each_sen := to_array(all_sen, '.'); {Array of all sentences}
+  syno_array := read_syno_file();
 
   {showing result}
   repeat
@@ -60,7 +70,7 @@ begin
 
     if analyser = '1' then
       begin
-        write('Enter a word to find the frequency of it: ');
+        write('Enter a word to find the frequency of it (if no press enter): ');
         readln(keyword);
 
         top_3_freq := find_top_3(each_sen, lowercase(trim(keyword)));
@@ -69,18 +79,25 @@ begin
         number := 0;
         while (number <= 3) do
         begin
-          if (number = 0) then
+          if (number = 0) and (keyword = '') then
+          begin
+            number += 1;
+            break;
+          end
+          else if (number = 0) then
           begin
             writeln('Frequency of the word = ', top_3_freq[number, 1]);
             writeln();
           end
           else
           begin
-            writeln('No. ', number , ' frequency word is: ', trim(top_3_freq[number, 0]));
+            writeln('No. ', number , ' frequency word is: ', top_3_freq[number, 0]);
             writeln('With frequency ', top_3_freq[number, 1]);
             write('Any synonyms? (if no press enter): ');
-            readln();
-           end;
+            readln(syno);
+            if syno <> '' then
+              syno_array := add_syno(top_3_freq[number, 0], trim(syno), syno_array);
+          end;
           number += 1;
         end;
         writeln();
@@ -112,6 +129,21 @@ begin
 
     writeln('=================================');
   until analyser = '';
+
+  {rewrite file synonym}
+  assign(syno_file, 'synonym.txt');
+  rewrite(syno_file);
+  for i := 0 to length(syno_array)-1 do
+  begin
+    for j := 0 to length(syno_array[i])-1 do
+    begin
+      if (j = length(syno_array[i])-1) and (i <> length(syno_array)-1)then
+        writeln(syno_file, syno_array[i][j], ' ')
+      else
+        write(syno_file, syno_array[i][j], ' ');
+    end;
+  end;
+  close(syno_file);
 
   writeln('Goodbye');
 
