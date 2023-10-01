@@ -27,8 +27,8 @@ function get_file(file_name: string): TStringList;
 
 
   begin
-    AssignFile(passage, file_name); {set 'passage' as the file pointer pointing to the text file}    
-    
+    AssignFile(passage, file_name); {set 'passage' as the file pointer pointing to the text file}
+
     try
       reset(passage); {set the file pointer to the beginning of the file}
       temp_list := TStringList.Create; {initialize list}
