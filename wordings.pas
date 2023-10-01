@@ -7,8 +7,13 @@ uses
 
 type
   top_3 = array[0..3, 0..1] of string;
+  oneD = array of string;
+  twoD = array of oneD;
 
 function find_top_3(each_sen: TStringArray; keyword: string): top_3;
+function read_syno_file(): twoD;
+function check_str(target_str: string; line_of_syno: Array of string): boolean;
+function add_syno(keyword, syno: string; grp_array: twoD): twoD;
 function begin_pronoun(paragraph: ansistring): integer;
 
 const
@@ -90,6 +95,83 @@ begin
 end;
 
 
+function read_syno_file(): twoD;
+var
+  syno_file: textfile;
+  syno_grps: twoD;
+  syno_array: oneD;
+  temp: string;
+begin
+  assign(syno_file, 'synonym.txt');
+  reset(syno_file);
+  setlength(syno_grps, 0, 0);
+  while not EOF(syno_file) do
+  begin
+    readln(syno_file, temp);
+    if temp <> '' then
+    begin
+      syno_array := trim(temp).Split(' ');
+      insert(syno_array, syno_grps, -1);
+    end;
+  end;
+
+  close(syno_file);
+  read_syno_file := syno_grps;
+
+end;
+
+
+function check_str(target_str: string; line_of_syno: Array of string): boolean;
+var
+  relate: string;
+begin
+  for relate in line_of_syno do
+  begin
+    if target_str = relate then
+      exit(true);
+  end;
+  check_str := false;
+end;
+
+
+function add_syno(keyword, syno: string; grp_array: twoD): twoD;
+var
+  i: integer;
+  each_grp, temp: oneD;
+  inside_grp: boolean;
+begin
+  i := -1;
+  temp := oneD.create(keyword, syno);
+  inside_grp := false;
+  for each_grp in grp_array do
+  begin
+    i += 1;
+    if check_str(keyword, each_grp) and not(check_str(syno, each_grp)) then
+    begin
+      insert([syno], grp_array[i], -1);
+      inside_grp := true;
+      break;
+    end
+
+    else if check_str(syno, each_grp) and not(check_str(keyword, each_grp)) then
+    begin
+      insert([keyword], grp_array[i], -1);
+      inside_grp := true;
+      break;
+    end
+
+    else if check_str(syno, each_grp) and check_str(keyword, each_grp) then
+    begin
+      inside_grp := true;
+      break;
+    end;
+  end;
+
+  if not(inside_grp) then
+    insert(temp, grp_array, -1);
+  add_syno := grp_array;
+
+end;
 
 
 function begin_pronoun(paragraph: ansistring): integer;
