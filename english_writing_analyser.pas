@@ -82,7 +82,7 @@ begin
           if (number = 0) and (keyword = '') then
           begin
             number += 1;
-            break;
+            continue;
           end
           else if (number = 0) then
           begin
