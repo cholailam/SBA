@@ -79,10 +79,7 @@ begin
         for number := 0 to 3 do
         begin
           if (number = 0) and (keyword = '') then
-          begin
-            number += 1;
             continue;
-          end
           else if (number = 0) then
           begin
             writeln('Frequency of the word = ', top_3_freq[number, 1]);
@@ -97,7 +94,6 @@ begin
             if syno <> '' then
               syno_array := add_syno(top_3_freq[number, 0], trim(syno), syno_array);
           end;
-          number += 1;
         end;
         writeln();
 
