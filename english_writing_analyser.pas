@@ -76,8 +76,7 @@ begin
         top_3_freq := find_top_3(each_sen, lowercase(trim(keyword)));
 
         writeln();
-        number := 0;
-        while (number <= 3) do
+        for number := 0 to 3 do
         begin
           if (number = 0) and (keyword = '') then
           begin
